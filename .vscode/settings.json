@@ -116,5 +116,5 @@
         "cfe_tbl_platform_cfg.h": "c",
         "cfe_tbl_internal_cfg.h": "c"
     },
-    "cmake.sourceDirectory": "/home/hj/Documents/FSW/tools/elf2cfetbl"
+    "cmake.sourceDirectory": "/home/eodnjs7783/base/FSW_Baseline/osal"
 }
