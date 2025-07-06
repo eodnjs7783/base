@@ -36,8 +36,32 @@
 ** Sample App command codes
 */
 
-#define UANT_APP_NOOP_CC           0
-#define UANT_APP_RESET_COUNTERS_CC 1
+typedef enum
+{
+    /* Housekeeping / common */
+    UANT_APP_NOOP_CC = 0,          /* Ping */
+    UANT_APP_RESET_COUNTERS_CC,    /* Zero burn & reboot counters           */
+    UANT_APP_SOFT_REBOOT_CC,       /* MCU soft reset                        */
+
+    /* Burn control */
+    UANT_APP_BURN_CHANNEL_CC,      /* Args: addr, channel (0|1), seconds    */
+    UANT_APP_STOP_BURN_CC,         /* Args: addr                            */
+
+    /* Telemetry */
+    UANT_APP_GET_STATUS_CC,        /* Burn + release status (gs_gssb_ant6_get_release_status) */
+    UANT_APP_GET_BACKUP_STATUS_CC, /* Backup timer/state  (gs_gssb_ant6_get_backup_status)  */
+    UANT_APP_GET_BOARD_STATUS_CC,  /* Uptime, reboot cnt  (gs_gssb_ant6_get_board_status)   */
+    UANT_APP_GET_TEMPERATURE_CC,   /* MCU internal temp (gs_gssb_ant6_get_internal_temp)   */
+
+    /* Backup settings */
+    UANT_APP_GET_SETTINGS_CC,      /* Read  backup cfg (minutes, active, max) */
+    UANT_APP_SET_SETTINGS_CC,      /* Write backup cfg                        */
+
+   
+
+}uant_app_cc_n;
+
+
 #endif
 
 // processgroundcommand 에서 경우를 나누기 위한 코드

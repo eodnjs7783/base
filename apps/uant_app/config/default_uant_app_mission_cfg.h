@@ -32,6 +32,13 @@
 #define UANT_APP_MISSION_CFG_H
 #define MAX_TM_DATASIZE     170
 
+
+#define UANT_I2C_DEV        "/dev/i2c-0"
+#define UANT_slave1_ADDR       0x05
+#define UANT_slave2_ADDR       0x06
+#define UANT_I2C_TIMEOUT_MS    50
+
+
 #include "uant_app_interface_cfg.h"
 
 #endif

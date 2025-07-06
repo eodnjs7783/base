@@ -32,10 +32,14 @@
 #include "uant_app_tbl.h"
 #include "uant_app_version.h"
 #include "cfe_msg.h"
+<<<<<<< HEAD
 /* uant_app.c 위쪽 include 목록에 추가 */
 #include <gs/util/linux/drivers/i2c/i2c.h>   /* gs_i2c_linux_master_transaction */
 #include <gs/util/drivers/i2c/master.h>      /* gs_i2c_master_* 타입 */
 #include <gs/gssb/gssb_autodeploy.h>         /* gs_gssb_autodeploy_start */
+=======
+#include "gs/util/linux/drivers/i2c/i2c_native.h"
+>>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
 
 
 /*
@@ -116,8 +120,21 @@ void UANT_APP_Main(void)
 CFE_Status_t UANT_APP_Init(void)
 {
     CFE_Status_t status;
+<<<<<<< HEAD
     int init_err = gs_linux_i2c_init(0, "/dev/I2C0")
     if (init_err != GS_OK)
+=======
+    
+
+    /* Zero out the global data structure */
+    memset(&UANT_APP_Data, 0, sizeof(UANT_APP_Data));
+
+    UANT_APP_Data.RunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    // i2c 초기화
+    int init_err = gs_linux_i2c_init(0, UANT_I2C_DEV)
+    if ( init_err != GS_OK)
+>>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
     {
         
         CFE_EVS_SendEvent(UANT_APP_I2C_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
@@ -127,12 +144,15 @@ CFE_Status_t UANT_APP_Init(void)
     } else {
         status = CFE_SUCCESS;
     }
+<<<<<<< HEAD
     //상세 에러는 이벤트 로그에, 반환같은 CFE 에러코드로
 
     /* Zero out the global data structure */
     memset(&UANT_APP_Data, 0, sizeof(UANT_APP_Data));
 
     UANT_APP_Data.RunStatus = CFE_ES_RunStatus_APP_RUN;
+=======
+>>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
 
     /*
     ** Initialize app configuration data
@@ -161,7 +181,11 @@ CFE_Status_t UANT_APP_Init(void)
          */
         CFE_MSG_Init(CFE_MSG_PTR(UANT_APP_Data.HkTlm.TelemetryHeader), CFE_SB_ValueToMsgId(UANT_APP_HK_TLM_MID),
                      sizeof(UANT_APP_Data.HkTlm));
+<<<<<<< HEAD
 
+=======
+        // OP_TLM_MID는 dispatch 에서 초기화
+>>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
         /*
          ** Create Software Bus message pipe.
          */

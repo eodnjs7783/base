@@ -129,5 +129,5 @@
         "i2c.h": "c",
         "expected": "c"
     },
-    "cmake.sourceDirectory": "/home/hj/Documents/FSW/tools/elf2cfetbl"
+    "cmake.sourceDirectory": "/home/eodnjs7783/base/FSW_Baseline/osal"
 }

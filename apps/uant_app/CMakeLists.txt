@@ -16,22 +16,21 @@ else()
   )
 endif()
 
-add_subdirectory(${MISSION_LIB_DIR}/libgssb_client)
-add_subdirectory(${MISSION_LIB_DIR}/libutil)
+
 # Create the app module
 add_cfe_app(uant_app ${APP_SRC_FILES})
 
 #target_include_directories(uant_app PUBLIC fsw/inc)
-target_include_directories(uant_app PRIVATE
-    ${MISSION_LIB_DIR}/libgssb_client/include)
 
-target_compile_definitions(uant_app PRIVATE GS_GSSB_INTERNAL_USE=1)
-
-
+target_include_directories(uant_app PUBLIC
+    fsw/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/submodules/libgscsp/lib/libgssb_client/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/submodules/libgscsp/lib/libutil/include
+)
 # Include the public API from uant_lib to demonstrate how
 # to call library-provided functions
-add_cfe_app_dependency(uant_app libgssb_client)
-add_cfe_app_dependency(uant_app libutil)
+add_cfe_app_dependency(uant_app libgssb_client libutil)
+
 #add_cfe_app_dependency(uant_app)
 
 # Add table

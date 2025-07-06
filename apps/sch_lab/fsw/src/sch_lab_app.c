@@ -127,7 +127,7 @@ void SCH_LAB_AppMain(void)
                     if (LocalStateEntry->Counter >= LocalStateEntry->PacketRate)
                     {
                         LocalStateEntry->Counter = 0;
-                        CFE_SB_TransmitMsg(CFE_MSG_PTR(LocalStateEntry->CommandHeader), true);
+                        CFE_SB_TransmitMsg(CFE_MSG_PTR(LocalStateEntry->CommandHeader), true); //예약된 메시지를 보내는 코드
                     }
                 }
                 ++LocalStateEntry;
@@ -138,6 +138,7 @@ void SCH_LAB_AppMain(void)
 
     CFE_ES_ExitApp(RunStatus);
 }
+
 
 void SCH_LAB_LocalTimerCallback(osal_id_t object_id, void *arg)
 {
