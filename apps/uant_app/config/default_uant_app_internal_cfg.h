@@ -41,4 +41,6 @@
 
 #define UANT_APP_TBL_ELEMENT_1_MAX 10
 
+#define GS_GSSB_INTERNAL_USE 1
+
 #endif

@@ -24,7 +24,7 @@
 /*
 ** Include Files:
 */
-#include "uant.h" 
+
 #include "uant_app.h"
 #include "uant_app_dispatch.h"
 #include "uant_app_cmds.h"
@@ -33,6 +33,10 @@
 #include "uant_app_msg.h"
 #include "cfe_msg.h"
 #include <gs/gssb/gssb_ant6.h>
+#include <gs/gssb/internal/gssb_common.h>   /* gs_gssb_common_* 함수 선언 */
+#include <gs/gssb/internal/gssb_cmd_id.h>   /* GSSB_CMD_ 열거형 */
+#include <gs/gssb/gssb_autodeploy.h>
+
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
@@ -92,33 +96,17 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             break;
 
         /* ───────── 카운터 리셋 ───────── */
-        case UANT_APP_RESET_COUNTERS_CC:
+        case GSSB_CMD_COMMON_RESET_COUNT:
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_ResetCountersCmd_t)))
             {
                 UANT_APP_ResetCountersCmd((const UANT_APP_ResetCountersCmd_t *)SBBufPtr);
             }
             break;
 
-        /* ───────── 장치 리셋 ───────── */
-        case UANT_APP_RESET_CC:
-            if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_ISIS_ResetCmd_t)))
-            {
-                status = ISIS_UANT_Reset();
-                if (status != CFE_SUCCESS)
-                {
-                    CFE_EVS_SendEvent(UANT_APP_RESET_ERR_EID, CFE_EVS_EventType_ERROR,
-                                    "UANT: Reset command failed, status = 0x%08X", status);
-                    UANT_APP_Data.ErrCounter++;
-                }
-                else
-                {
-                    UANT_APP_Data.CmdCounter++;
-                }
-            }
-            break;
+
 
          /* ------------ Board Soft‑Reboot ------------ */
-        case UANT_APP_SOFT_REBOOT_CC:
+        case GSSB_CMD_SOFT_RESET:
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_SoftRebootCmd_t)))
             {
                 const UANT_APP_SoftRebootCmd_t *cmd = (const void *)SBBufPtr;
@@ -138,7 +126,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
 
 
         /* ------------ Burn / Stop ------------ */
-        case UANT_APP_BURN_CHANNEL_CC:
+        case GSSB_CMD_COMMON_BURN_CHANNEL:
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_BurnChannelCmd_t)))
             {
                 const UANT_APP_BurnChannelCmd_t *cmd = (const void *)SBBufPtr;
@@ -167,7 +155,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             }
             break;
 
-        case UANT_APP_STOP_BURN_CC:
+        case GSSB_CMD_COMMON_STOP_BURN:
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_StopBurnCmd_t)))
             {
                 const UANT_APP_StopBurnCmd_t *cmd = (const void *)SBBufPtr;
@@ -186,7 +174,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             break;
 
         /* ---------- BOARD‑STATUS (uptime, reboot‑cnt) ---------- */
-        case UANT_APP_GET_BOARD_STATUS_CC:
+        case GSSB_CMD_COMMON_GET_BOARD_STATUS:
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_GetBoardStatusCmd_t)))
             {
                 const UANT_APP_GetBoardStatusCmd_t *cmd = (const void *)SBBufPtr;
@@ -214,7 +202,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             break;
 
         /* ---------- MCU 내부 온도 ---------- */
-        case UANT_APP_GET_TEMPERATURE_CC:
+        case GSSB_CMD_COMMON_GET_INTERNAL_TEMP:
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_GetTemperatureCmd_t)))
             {
                 const UANT_APP_GetTemperatureCmd_t *cmd = (const void *)SBBufPtr;
@@ -243,7 +231,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
 
 
        /* ------------ Telemetry pulls ------------ */
-        case UANT_APP_GET_STATUS_CC:
+        case GSSB_CMD_ANT6_GET_STATUS_ALL_CHANNELS:
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_GetStatusCmd_t)))
             {
                 const UANT_APP_GetStatusCmd_t *cmd = (const void *)SBBufPtr;
@@ -269,7 +257,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             }
             break;
 
-        case UANT_APP_GET_BACKUP_STATUS_CC:
+        case GSSB_CMD_COMMON_GET_BACKUP_STATUS:
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_GetBackupStatusCmd_t)))
             {
                 const UANT_APP_GetBackupStatusCmd_t *cmd = (const void *)SBBufPtr;
@@ -296,7 +284,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             break;
         
         /* ---------- 백업‑설정 READ ---------- */
-        case UANT_APP_GET_SETTINGS_CC:
+        case GSSB_CMD_ANT6_GET_BACKUP_SETTINGS:
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_GetSettingsCmd_t)))
             {
                 const UANT_APP_GetSettingsCmd_t *cmd = (const void *)SBBufPtr;
@@ -326,7 +314,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             break;
 
         /* ---------- 백업‑설정 WRITE ---------- */
-        case UANT_APP_SET_SETTINGS_CC:
+        case GSSB_CMD_ANT6_SET_BACKUP_SETTINGS:
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_SetSettingsCmd_t)))
             {
                 const UANT_APP_SetSettingsCmd_t *cmd = (const void *)SBBufPtr;
@@ -361,7 +349,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
 
         default:
             CFE_EVS_SendEvent(UANT_APP_CC_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Invalid ground command code: CC = %d", CommandCode);
+                              "Invalid ground command code: CC = %d", cc);
             break;
     }
 

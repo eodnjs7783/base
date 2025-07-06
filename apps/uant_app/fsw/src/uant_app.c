@@ -32,6 +32,10 @@
 #include "uant_app_tbl.h"
 #include "uant_app_version.h"
 #include "cfe_msg.h"
+/* uant_app.c 위쪽 include 목록에 추가 */
+#include <gs/util/linux/drivers/i2c/i2c.h>   /* gs_i2c_linux_master_transaction */
+#include <gs/util/drivers/i2c/master.h>      /* gs_i2c_master_* 타입 */
+#include <gs/gssb/gssb_autodeploy.h>         /* gs_gssb_autodeploy_start */
 
 
 /*
@@ -112,7 +116,18 @@ void UANT_APP_Main(void)
 CFE_Status_t UANT_APP_Init(void)
 {
     CFE_Status_t status;
-    
+    int init_err = gs_linux_i2c_init(0, "/dev/I2C0")
+    if (init_err != GS_OK)
+    {
+        
+        CFE_EVS_SendEvent(UANT_APP_I2C_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Sensor read failed: driver error code = 0x%X", init_err);
+
+        return CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    } else {
+        status = CFE_SUCCESS;
+    }
+    //상세 에러는 이벤트 로그에, 반환같은 CFE 에러코드로
 
     /* Zero out the global data structure */
     memset(&UANT_APP_Data, 0, sizeof(UANT_APP_Data));

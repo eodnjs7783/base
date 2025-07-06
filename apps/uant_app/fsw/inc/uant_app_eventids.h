@@ -38,5 +38,5 @@
 #define UANT_APP_SET_SETTINGS_ERR_EID 20 /* set_backup_settings()      */
 
 #define UANT_APP_RESET_ERR_EID      21   /* soft_reset() failed        */
-
+#define UANT_APP_I2C_INIT_ERR_EID   22
 #endif /* UANT_APP_EVENTS_H */
