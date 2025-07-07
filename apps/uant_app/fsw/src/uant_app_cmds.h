@@ -28,7 +28,9 @@
 ** Required header files.
 */
 #include "cfe_error.h"
+#include "uant_app_msgstruct.h"
 #include "uant_app_msg.h"
+
 
 CFE_Status_t UANT_APP_SendHkCmd(const UANT_APP_SendHkCmd_t *Msg);
 CFE_Status_t UANT_APP_ResetCountersCmd(const UANT_APP_ResetCountersCmd_t *Msg);

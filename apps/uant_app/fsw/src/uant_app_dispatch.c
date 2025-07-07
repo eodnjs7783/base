@@ -24,11 +24,8 @@
 /*
 ** Include Files:
 */
-<<<<<<< HEAD
 
-=======
-#include "uant.h" 
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
 #include "uant_app.h"
 #include "uant_app_dispatch.h"
 #include "uant_app_cmds.h"
@@ -37,13 +34,11 @@
 #include "uant_app_msg.h"
 #include "cfe_msg.h"
 #include <gs/gssb/gssb_ant6.h>
-<<<<<<< HEAD
+
 #include <gs/gssb/internal/gssb_common.h>   /* gs_gssb_common_* 함수 선언 */
 #include <gs/gssb/internal/gssb_cmd_id.h>   /* GSSB_CMD_ 열거형 */
 #include <gs/gssb/gssb_autodeploy.h>
 
-=======
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
@@ -83,15 +78,13 @@ bool UANT_APP_VerifyCmdLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLe
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 /*                                                                            */
-<<<<<<< HEAD
-/* UANT ground commands                                                     */
-=======
+
 /* UANT ground commands or scheduled commands(from sch app/ ref. sch's table)                                                    */
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
 /*                                                                            */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
 void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
-{   CFE_Status_t     status; // 내부 판단용
+{   //CFE_Status_t     status; // 내부 판단용
     CFE_MSG_FcnCode_t cc = 0;
     CFE_MSG_GetFcnCode(&SBBufPtr->Msg, &cc);
     gs_error_t   gs_st;
@@ -107,11 +100,9 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             break;
 
         /* ───────── 카운터 리셋 ───────── */
-<<<<<<< HEAD
-        case GSSB_CMD_COMMON_RESET_COUNT:
-=======
+
         case UANT_APP_RESET_COUNTERS_CC:
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_ResetCountersCmd_t)))
             {
                 UANT_APP_ResetCountersCmd((const UANT_APP_ResetCountersCmd_t *)SBBufPtr);
@@ -119,14 +110,10 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             break;
 
 
-<<<<<<< HEAD
 
          /* ------------ Board Soft‑Reboot ------------ */
-        case GSSB_CMD_SOFT_RESET:
-=======
-         /* ------------ Board Soft‑Reboot ------------ */
         case UANT_APP_SOFT_REBOOT_CC:
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_SoftRebootCmd_t)))
             {
                 const UANT_APP_SoftRebootCmd_t *cmd = (const void *)SBBufPtr;
@@ -146,11 +133,9 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
 
 
         /* ------------ Burn / Stop ------------ */
-<<<<<<< HEAD
-        case GSSB_CMD_COMMON_BURN_CHANNEL:
-=======
+
         case UANT_APP_BURN_CHANNEL_CC:
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_BurnChannelCmd_t)))
             {
                 const UANT_APP_BurnChannelCmd_t *cmd = (const void *)SBBufPtr;
@@ -179,11 +164,8 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             }
             break;
 
-<<<<<<< HEAD
-        case GSSB_CMD_COMMON_STOP_BURN:
-=======
         case UANT_APP_STOP_BURN_CC:
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_StopBurnCmd_t)))
             {
                 const UANT_APP_StopBurnCmd_t *cmd = (const void *)SBBufPtr;
@@ -202,11 +184,9 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             break;
 
         /* ---------- BOARD‑STATUS (uptime, reboot‑cnt) ---------- */
-<<<<<<< HEAD
-        case GSSB_CMD_COMMON_GET_BOARD_STATUS:
-=======
+
         case UANT_APP_GET_BOARD_STATUS_CC:
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_GetBoardStatusCmd_t)))
             {
                 const UANT_APP_GetBoardStatusCmd_t *cmd = (const void *)SBBufPtr;
@@ -223,7 +203,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
                 {
                     UANT_APP_BoardStatusTlm_t tlm;
                     CFE_MSG_Init(CFE_MSG_PTR(tlm.TlmHdr),
-                                CFE_SB_ValueToMsgId(UANT_APP_BRD_TLM_MID),
+                                CFE_SB_ValueToMsgId(UANT_APP_OP_TLM_MID),
                                 sizeof(tlm));
                     memcpy(&tlm.Payload, &bs, sizeof(bs));
                     CFE_SB_TimeStampMsg(CFE_MSG_PTR(tlm.TlmHdr));
@@ -234,11 +214,8 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             break;
 
         /* ---------- MCU 내부 온도 ---------- */
-<<<<<<< HEAD
-        case GSSB_CMD_COMMON_GET_INTERNAL_TEMP:
-=======
         case UANT_APP_GET_TEMPERATURE_CC:
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_GetTemperatureCmd_t)))
             {
                 const UANT_APP_GetTemperatureCmd_t *cmd = (const void *)SBBufPtr;
@@ -255,7 +232,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
                 {
                     UANT_APP_TempTlm_t tlm;
                     CFE_MSG_Init(CFE_MSG_PTR(tlm.TlmHdr),
-                                CFE_SB_ValueToMsgId(UANT_APP_TEMP_TLM_MID),
+                                CFE_SB_ValueToMsgId(UANT_APP_OP_TLM_MID),
                                 sizeof(tlm));
                     tlm.Payload.Temperature = temp;
                     CFE_SB_TimeStampMsg(CFE_MSG_PTR(tlm.TlmHdr));
@@ -267,11 +244,9 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
 
 
        /* ------------ Telemetry pulls ------------ */
-<<<<<<< HEAD
-        case GSSB_CMD_ANT6_GET_STATUS_ALL_CHANNELS:
-=======
+
         case UANT_APP_GET_STATUS_CC:
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_GetStatusCmd_t)))
             {
                 const UANT_APP_GetStatusCmd_t *cmd = (const void *)SBBufPtr;
@@ -287,7 +262,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
                 {
                     UANT_APP_RlsStatusTlm_t tlm;
                     CFE_MSG_Init(CFE_MSG_PTR(tlm.TlmHdr),
-                                CFE_SB_ValueToMsgId(UANT_APP_RLS_TLM_MID),
+                                CFE_SB_ValueToMsgId(UANT_APP_OP_TLM_MID),
                                 sizeof(tlm));
                     memcpy(&tlm.Payload, &st, sizeof(st));
                     CFE_SB_TimeStampMsg(CFE_MSG_PTR(tlm.TlmHdr));
@@ -297,11 +272,8 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             }
             break;
 
-<<<<<<< HEAD
-        case GSSB_CMD_COMMON_GET_BACKUP_STATUS:
-=======
         case UANT_APP_GET_BACKUP_STATUS_CC:
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_GetBackupStatusCmd_t)))
             {
                 const UANT_APP_GetBackupStatusCmd_t *cmd = (const void *)SBBufPtr;
@@ -317,7 +289,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
                 {
                     UANT_APP_BackupStatusTlm_t tlm;
                     CFE_MSG_Init(CFE_MSG_PTR(tlm.TlmHdr),
-                                CFE_SB_ValueToMsgId(UANT_APP_BKP_TLM_MID),
+                                CFE_SB_ValueToMsgId(UANT_APP_OP_TLM_MID),
                                 sizeof(tlm));
                     memcpy(&tlm.Payload, &bs, sizeof(bs));
                     CFE_SB_TimeStampMsg(CFE_MSG_PTR(tlm.TlmHdr));
@@ -327,12 +299,9 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             }
             break;
         
-        /* ---------- 백업‑설정 READ ---------- */
-<<<<<<< HEAD
-        case GSSB_CMD_ANT6_GET_BACKUP_SETTINGS:
-=======
+
         case UANT_APP_GET_SETTINGS_CC:
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_GetSettingsCmd_t)))
             {
                 const UANT_APP_GetSettingsCmd_t *cmd = (const void *)SBBufPtr;
@@ -349,7 +318,7 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
                 {
                     UANT_APP_SettingsTlm_t tlm;
                     CFE_MSG_Init(CFE_MSG_PTR(tlm.TlmHdr),
-                                CFE_SB_ValueToMsgId(UANT_APP_CFG_TLM_MID),
+                                CFE_SB_ValueToMsgId(UANT_APP_OP_TLM_MID),
                                 sizeof(tlm));
                     tlm.Payload.MinutesUntilDeploy = cfg.minutes;
                     tlm.Payload.BackupActive       = cfg.backup_active;
@@ -362,11 +331,9 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
             break;
 
         /* ---------- 백업‑설정 WRITE ---------- */
-<<<<<<< HEAD
-        case GSSB_CMD_ANT6_SET_BACKUP_SETTINGS:
-=======
+
         case UANT_APP_SET_SETTINGS_CC:
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
             if (UANT_APP_VerifyCmdLength(&SBBufPtr->Msg, sizeof(UANT_APP_SetSettingsCmd_t)))
             {
                 const UANT_APP_SetSettingsCmd_t *cmd = (const void *)SBBufPtr;
@@ -401,11 +368,10 @@ void UANT_APP_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr)
 
         default:
             CFE_EVS_SendEvent(UANT_APP_CC_ERR_EID, CFE_EVS_EventType_ERROR,
-<<<<<<< HEAD
+
                               "Invalid ground command code: CC = %d", cc);
-=======
-                              "Invalid ground command code: CC = %d", CommandCode);
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
+
             break;
     }
 
@@ -430,11 +396,9 @@ void UANT_APP_TaskPipe(const CFE_SB_Buffer_t *SBBufPtr)
         case UANT_APP_CMD_MID:
             UANT_APP_ProcessGroundCommand(SBBufPtr);
             break;
-<<<<<<< HEAD
-        //sch 추가?
-=======
+
       
->>>>>>> cabbd67b0a7f3827e498cf0b0b859971cd8a224e
+
         case UANT_APP_SEND_HK_MID:
             UANT_APP_SendHkCmd((const UANT_APP_SendHkCmd_t *)SBBufPtr);
             break;

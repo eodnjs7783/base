@@ -127,7 +127,9 @@
         "uant_app_cmds.h": "c",
         "gssb_cmd_id.h": "c",
         "i2c.h": "c",
-        "expected": "c"
+        "expected": "c",
+        "gssb_autodeploy.h": "c",
+        "i2c_native.h": "c"
     },
     "cmake.sourceDirectory": "/home/eodnjs7783/base/FSW_Baseline/osal"
 }

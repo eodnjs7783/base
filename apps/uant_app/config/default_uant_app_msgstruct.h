@@ -16,6 +16,7 @@
 #include "uant_app_msgdefs.h"      /* 기능‑코드, 길이 매크로 등 */
 #include "uant_app_mission_cfg.h"  /* 미션별 상수 */
 
+
 /************************************************************************
  *  Command Messages
  *
@@ -39,6 +40,7 @@ typedef struct
 typedef struct
 {
     CFE_MSG_CommandHeader_t CmdHdr;
+    uint8_t Addr;
 } UANT_APP_SoftRebootCmd_t;        /* FC = UANT_APP_SOFT_REBOOT_CC */
 
 /* Burn one channel for N seconds
@@ -103,17 +105,15 @@ typedef struct
 /************************************************************************
  *  Telemetry Messages
  ************************************************************************/
-
-/*---------------- Housekeeping ----------------*/
 typedef struct
 {
-    uint8_t  CmdCounter;     /* accepted */
-    uint8_t  ErrCounter;     /* rejected */
-} UANT_APP_HkTlm_Payload_t;
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+} UANT_APP_SendHkCmd_t;
+
 
 typedef struct
 {
-    CFE_MSG_TelemetryHeader_t TlmHdr;
+    CFE_MSG_TelemetryHeader_t TelemetryHeader;
     UANT_APP_HkTlm_Payload_t  Payload;
 } UANT_APP_HkTlm_t;
 
